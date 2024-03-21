@@ -1,7 +1,7 @@
 using Application.Brands;
 using Application.Brands.Entities;
 
-using AutoMapper;
+using Mapster;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -12,35 +12,46 @@ internal class BrandRepository : IBrandRepository
 {
     private readonly DataContext context;
     private readonly TimeProvider timeProvider;
-    private readonly IMapper mapper;
 
-    public BrandRepository(DataContext context, TimeProvider timeProvider, IMapper mapper)
+    public BrandRepository(DataContext context, TimeProvider timeProvider)
     {
         this.context = context;
         this.timeProvider = timeProvider;
-        this.mapper = mapper;
     }
 
     public virtual async ValueTask<List<Brand>> GetBrands(CancellationToken cancellationToken)
     {
-        var brands = await context.Brands.Include(x => x.Products).AsNoTracking().ToListAsync(cancellationToken);
-
-        return mapper.Map<List<Brand>>(brands);
+        var brands = await context.Brands
+                        .Include(x => x.Products)
+                        .AsNoTracking()
+                        .ProjectToType<Brand>()
+                        .ToListAsync();
+        return brands;
     }
 
 #nullable enable
     public virtual async ValueTask<Brand?> GetBrandById(Guid id, CancellationToken cancellationToken)
     {
-        var brand = await context.Brands.Where(x => x.Id == id).Include(x => x.Products).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        var brand = await context.Brands
+                        .Where(x => x.Id == id)
+                        .Include(x => x.Products)
+                        .AsNoTracking()
+                        .ProjectToType<Brand>()
+                        .FirstOrDefaultAsync(cancellationToken);
 
-        return mapper.Map<Brand>(brand);
+        return brand;
     }
 
     public virtual async ValueTask<Brand?> GetBrandByName(string brandName, CancellationToken cancellationToken)
     {
-        var brand = await context.Brands.Where(x => x.BrandName == brandName).Include(x => x.Products).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        var brand = await context.Brands
+                        .Where(x => x.BrandName == brandName)
+                        .Include(x => x.Products)
+                        .AsNoTracking()
+                        .ProjectToType<Brand>()
+                        .FirstOrDefaultAsync(cancellationToken);
 
-        return mapper.Map<Brand>(brand);
+        return brand;
     }
 #nullable disable
 

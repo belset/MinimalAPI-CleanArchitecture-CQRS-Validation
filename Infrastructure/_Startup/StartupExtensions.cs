@@ -1,12 +1,11 @@
-using System.Runtime.CompilerServices;
-
 using Application.Brands;
 using Application.Common.Services;
 using Application.Products;
 using Application.Stores;
 
 using Infrastructure.Databases;
-using Infrastructure.Databases.Extensions;
+
+using Mapster;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,8 @@ public static class StartupExtensions
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddMapster();
+
         services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase($"data-{Guid.NewGuid()}"), ServiceLifetime.Singleton);
         services.AddSingleton<IDataInitialization>(x => x.GetRequiredService<DataContext>());
 

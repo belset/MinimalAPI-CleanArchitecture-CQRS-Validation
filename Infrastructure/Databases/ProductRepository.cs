@@ -1,7 +1,7 @@
 using Application.Products;
 using Application.Products.Entities;
 
-using AutoMapper;
+using Mapster;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +12,11 @@ internal class ProductRepository : IProductRepository
 {
     private readonly DataContext context;
     private readonly TimeProvider timeProvider;
-    private readonly IMapper mapper;
 
-    public ProductRepository(DataContext context, TimeProvider timeProvider, IMapper mapper)
+    public ProductRepository(DataContext context, TimeProvider timeProvider)
     {
         this.context = context;
         this.timeProvider = timeProvider;
-        this.mapper = mapper;
     }
 
     public virtual async ValueTask<List<Product>> GetProducts(CancellationToken cancellationToken)
@@ -26,9 +24,10 @@ internal class ProductRepository : IProductRepository
         var products = await context.Products
             .Include(x => x.Brand)
             .AsNoTracking()
+            .ProjectToType<Product>()
             .ToListAsync(cancellationToken);
 
-        return mapper.Map<List<Product>>(products);
+        return products;
     }
 
 #nullable enable
@@ -37,18 +36,20 @@ internal class ProductRepository : IProductRepository
         var product = await context.Products.Include(x => x.Brand)
             .Where(x => x.Id == id)
             .AsNoTracking()
+            .ProjectToType<Product>()
             .FirstOrDefaultAsync(cancellationToken);
 
-        return mapper.Map<Product>(product);
+        return product;
     }
     public virtual async ValueTask<Product?> GetProductByName(string productName, string brandName, CancellationToken cancellationToken)
     {
         var product = await context.Products.Include(x => x.Brand)
             .Where(x => x.ProductName == productName && x.Brand.BrandName == brandName)
             .AsNoTracking()
+            .ProjectToType<Product>()
             .FirstOrDefaultAsync(cancellationToken);
 
-        return mapper.Map<Product>(product);
+        return product;
     }
 #nullable disable
 
@@ -82,9 +83,10 @@ internal class ProductRepository : IProductRepository
         var result = await context.Products.Include(x => x.Brand)
             .Where(x => x.Id == id)
             .AsNoTracking()
+            .ProjectToType<Product>()
             .FirstAsync(cancellationToken);
 
-        return mapper.Map<Product>(result);
+        return result;
     }
 
     public virtual async ValueTask<bool> DeleteProduct(Guid id, CancellationToken cancellationToken)
