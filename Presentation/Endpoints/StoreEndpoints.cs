@@ -2,8 +2,7 @@ using Application.Common;
 using Application.Stores.Entities;
 using Application.Stores.Queries.GetStoreById;
 using Application.Stores.Queries.GetStores;
-
-using Presentation._Startup;
+using Presentation.Extensions;
 using Presentation.Filters;
 
 

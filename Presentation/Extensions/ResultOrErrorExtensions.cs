@@ -4,7 +4,7 @@ using Application.Common;
 using Application.Common.Exceptions;
 
 
-namespace Presentation._Startup;
+namespace Presentation.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ResultOrErrorExtensions

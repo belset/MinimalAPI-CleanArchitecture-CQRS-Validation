@@ -7,8 +7,7 @@ using Application.Products.Queries.GetProductById;
 using Application.Products.Queries.GetProducts;
 
 using Microsoft.AspNetCore.Http.Extensions;
-
-using Presentation._Startup;
+using Presentation.Extensions;
 using Presentation.Filters;
 
 
