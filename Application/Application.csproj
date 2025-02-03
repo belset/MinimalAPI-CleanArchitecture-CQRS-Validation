@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>Ilya Rudenka</Authors>
     <Copyright>(c) 2024 Ilya Rudenka</Copyright>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ImplicitUsings>enable</ImplicitUsings>
